@@ -4,23 +4,60 @@ format: html
 editor: visual
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+## Task 1 
 
 ```{r}
-1 + 1
-```
+library(lubridate)
+library(tidyverse)
+library(janitor)
+library(dplyr)
 
-You can add options to executable code like this
+
+```
 
 ```{r}
-#| echo: false
-2 * 2
+bird_observations <- read_csv(here::here("data", "52_pp52_birds_1.csv"))
+sites <- read_csv(here::here("data", "52_pp52_sites_1.csv"))
+surveys <- read_csv(here::here("data", "52_pp52_surveys_1.csv"))
+taxalist <- read_csv(here::here("data", "52_pp52_taxalist_1.csv"))
+
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+```{r}
+birds_subset <- bird_observations %>%
+  filter(species_id %in% c("BHCO", "RWBL"),
+         site_id %in% c("LI-W", "NU-C"))
+
+```
+
+```{r}
+birds_full <- full_join(birds_subset, sites)
+birds_full
+```
+
+```{r}
+birds_full %>%
+  dplyr::rename(bird_obs_notes = "notes")
+  
+```
+
+```{r}
+all_obs <- full_join(birds_full, taxalist)
+
+```
+
+```{r}
+all_observations <- full_join(all_obs, surveys)
+all_observations
+```
+
+```{r}
+filter_bird <- all_observations %>%
+  select(c(survey_date, common_name, park_name, bird_count))
+
+```
+
+```{r}
+
+
+```
